@@ -49,7 +49,6 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        print ($request);
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|between:2,100',
             'email' => 'required|string|email|max:100|unique:users',
@@ -62,7 +61,10 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
-        $imagePath = request('image')->store('uploads', 'public');
+        $imagePath = null;
+        if (request('image') != null) {
+            $imagePath = request('image')->store('uploads', 'public');
+        }
         $user = User::create(array_merge(
             $validator->validated(),
             [

@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('real_estate_offers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')->constrained();
-            $table->foreignId('offer_type_id')->constrained();
             $table->string('price')->nullable();
             $table->string('space')->nullable();
             $table->string('region')->nullable();
