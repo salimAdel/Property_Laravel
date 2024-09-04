@@ -3,6 +3,7 @@
 use App\Http\Controllers\api\Dashboard\AdvertisementController;
 use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\Dashboard\CategoryController;
+use App\Http\Controllers\api\Dashboard\CompanyController;
 use App\Http\Controllers\api\Dashboard\OfferTypeController;
 use App\Http\Controllers\api\Dashboard\OwnershipController;
 use App\Http\Controllers\api\Dashboard\PartnerController;
@@ -81,6 +82,17 @@ Route::group([
 });
 
 
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'Company'
+],function ($router){
+    Route::get('/', [CompanyController::class, 'index']);
+    Route::post('/', [CompanyController::class, 'store']);
+    Route::get('/{id}', [CompanyController::class, 'show']);
+    Route::post('/{id}/edit', [CompanyController::class, 'update']);
+    Route::get('/{id}/delete', [CompanyController::class, 'destroy']);
+});
+
 
 Route::group([
     'middleware' => 'api',
@@ -134,7 +146,7 @@ Route::group([
     Route::get('/{id}', [RealEstateEvaluationController::class, 'show']);
     Route::post('/{id}/edit', [RealEstateEvaluationController::class, 'update']);
     Route::get('/{id}/delete', [RealEstateEvaluationController::class, 'destroy']);
-    Route::Post('/upload', [UploadeFileController::class,'UploadEvaluationFile']);
+    Route::Post('/{id}/upload', [UploadeFileController::class,'UploadEvaluationFile']);
 
 });
 
@@ -149,9 +161,10 @@ Route::group([
     Route::get('/{id}', [RealEstateOfferController::class, 'show']);
     Route::post('/{id}/edit', [RealEstateOfferController::class, 'update']);
     Route::get('/{id}/delete', [RealEstateOfferController::class, 'destroy']);
-    Route::Post('/upload', [UploadeFileController::class,'UploadOfferFile']);
+    Route::Post('/{id}/upload', [UploadeFileController::class,'UploadOfferFile']);
 });
 
 
 
 
+Route::get('/test',[\App\Http\Controllers\api\Dashboard\testController::class,'test']);

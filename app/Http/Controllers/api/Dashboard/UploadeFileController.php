@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\api\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Models\EvaluationAttachment;
-use App\Models\OfferAttachment;
+
+use App\Models\RealEstateEvaluation;
+use App\Models\RealEstateOffer;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class UploadeFileController extends Controller
 {
-    public function UploadEvaluationFile(Request $request)
+    public function UploadEvaluationFile(Request $request , $id)
     {
         try {
-            $evaluation_id = $request->get('evaluation_id');
+            $RealEstateEvaluation = RealEstateEvaluation::findorFail($id);
             $names = $request->get('name');
             $types = $request->get('type');
             $extensions = $request->get('extension');
@@ -23,15 +23,13 @@ class UploadeFileController extends Controller
                 if ($file != null) {
                     $imagePath = $file->store('uploads', 'public');
                 }
-                EvaluationAttachment::create([
+                $RealEstateEvaluation->Attachment()->create([
                     'name' => $names[$i],
                     'type' => $types[$i],
                     'extension' => $extensions[$i],
                     'path' => $imagePath,
-                    'evaluation_id'=>$evaluation_id,
                 ]);
             }
-            $a = asset('uploads');
             return response()->json("OfferAttachment created successfully" , 200);
         }catch (\Exception $exception){
             return response()->json($exception->getMessage(), 500);
@@ -40,10 +38,10 @@ class UploadeFileController extends Controller
 
 
 
-    public function UploadOfferFile(Request $request)
+    public function UploadOfferFile(Request $request , $id)
     {
         try {
-            $evaluation_id = $request->get('offer_id');
+            $RealEstateOffer = RealEstateOffer::findorFail($id);
             $names = $request->get('name');
             $types = $request->get('type');
             $extensions = $request->get('extension');
@@ -53,12 +51,11 @@ class UploadeFileController extends Controller
                 if ($file != null) {
                     $imagePath = $file->store('uploads', 'public');
                 }
-                OfferAttachment::create([
+                $RealEstateOffer->Attachment()->create([
                     'name' => $names[$i],
                     'type' => $types[$i],
                     'extension' => $extensions[$i],
                     'path' => $imagePath,
-                    'Offer_id'=>$evaluation_id,
                 ]);
             }
             return response()->json('OfferAttachment created successfully' , 200);

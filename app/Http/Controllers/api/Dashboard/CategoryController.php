@@ -31,14 +31,13 @@ class CategoryController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|between:2,100',
-                'offer_type_id' => 'required|integer',
+                'offer_type_id' => 'required|integer|exists:offer_types,id',
             ]);
 
             if ($validator->fails()) {
                 return response()->json($validator->errors()->toJson(), 400);
             }
-            $OfferType = OfferType::findorFail($validator->validated()['offer_type_id']); ;
-            $OfferType->categories()->create(["name" => $request->get('name')]);
+            Category::create($validator->validated());
                 return response()->json('Category created successfully', 201);
 
         }catch (\Exception $exception){
@@ -62,6 +61,7 @@ class CategoryController extends Controller
             $Category = Category::findorFail($id);
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|between:2,100',
+                'offer_type_id' => 'integer|exists:offer_types,id',
             ]);
 
             if ($validator->fails()) {

@@ -13,6 +13,8 @@ class RealEstateOffer extends Model
     use SoftDeletes;
 
     protected $guarded =[];
+    protected $hidden = ['created_at','updated_at','deleted_at'];
+
 
     public function offerTypes():HasMany
     {
@@ -20,5 +22,9 @@ class RealEstateOffer extends Model
     }
     public function user(){
         return $this->belongsTo(User::class);
+    }
+    public function Attachment()
+    {
+        return $this->hasMany(OfferAttachment::class , 'offer_id');
     }
 }

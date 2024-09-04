@@ -27,7 +27,7 @@ class RealEstateEvaluationController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'offer_type'=>'digits_between:0,3',
+                'property_type'=>'string|between:2,100',
                 'purpose' => 'string|between:2,100',
                 'region' => 'string|between:2,100',
                 'piece' => 'string|between:2,100',
@@ -58,7 +58,8 @@ class RealEstateEvaluationController extends Controller
     {
         try {
             $RealEstateEvaluation = RealEstateEvaluation::findorFail($id) ;
-            return response()->json($RealEstateEvaluation);
+            $Attachment = $RealEstateEvaluation->attachment;
+            return response()->json([$RealEstateEvaluation]);
         }
         catch (\Exception $exception){
             return response()->json($exception->getMessage(), 500);
@@ -68,7 +69,7 @@ class RealEstateEvaluationController extends Controller
         try {
             $RealEstateEvaluation = RealEstateEvaluation::findorFail($id);
             $validator = Validator::make($request->all(), [
-                'offer_type'=>'digits_between:0,3',
+                'property_type'=>'string|between:2,100',
                 'purpose' => 'string|between:2,100',
                 'region' => 'string|between:2,100',
                 'piece' => 'string|between:2,100',

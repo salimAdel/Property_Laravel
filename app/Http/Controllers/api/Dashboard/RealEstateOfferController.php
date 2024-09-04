@@ -28,7 +28,6 @@ class RealEstateOfferController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'category_id'=>'required|integer',
                 'price' => 'string|between:2,100',
                 'space' => 'string|between:2,100',
                 'region' => 'string|between:2,100',
@@ -44,13 +43,14 @@ class RealEstateOfferController extends Controller
                 'state' => 'integer|between:0,3',
                 'inKuwait'=>'boolean',
                 'notes' => 'string|between:2,255',
+                'category_id'=>'integer|exists:categories,id',
             ]);
 
             if ($validator->fails()) {
                 return response()->json($validator->errors()->toJson(), 400);
             }
             $Category = Category::find($request->get('category_id'));
-            $Category->RealEstateOffer->create(array_merge($validator->validated()['category_id'],['user_id'=>auth()->id()]));
+            RealEstateOffer::create(array_merge($validator->validated(),['user_id'=>auth()->id()]));
             return response()->json('RealEstateOffer created successfully',201);
 
         }catch (\Exception $exception){
@@ -61,7 +61,10 @@ class RealEstateOfferController extends Controller
     {
         try {
             $RealEstateOffer = RealEstateOffer::findorFail($id) ;
-            return response()->json($RealEstateOffer);
+            $Attachment = $RealEstateOffer->Attachment;
+            $user = $RealEstateOffer->user;
+            $Company = $RealEstateOffer->user->company;
+            return response()->json([$RealEstateOffer]);
         }
         catch (\Exception $exception){
             return response()->json($exception->getMessage(), 500);
@@ -71,17 +74,22 @@ class RealEstateOfferController extends Controller
         try {
             $RealEstateOffer = RealEstateOffer::findorFail($id);
             $validator = Validator::make($request->all(), [
-                'purpose' => 'string|between:2,100',
+                'price' => 'string|between:2,100',
+                'space' => 'string|between:2,100',
                 'region' => 'string|between:2,100',
                 'piece' => 'string|between:2,100',
                 'coupon' => 'string|between:2,100',
                 'street' => 'string|between:2,100',
                 'home' => 'string|between:2,100',
+                'description' => 'string|between:2,255',
+                'location' => 'string|between:2,100',
                 'phone' => 'string|between:6,16',
                 'phone2' => 'string|between:6,16',
-                'state' => 'digits_between:0,3',
-                'is_company'=>'boolean',
+                'whatsapp' => 'string|between:6,16',
+                'state' => 'integer|between:0,3',
+                'inKuwait'=>'boolean',
                 'notes' => 'string|between:2,255',
+                'category_id'=>'integer|exists:categories,id',
             ]);
             if ($validator->fails()) {
                 return response()->json($validator->errors()->toJson(), 400);

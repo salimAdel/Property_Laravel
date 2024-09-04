@@ -13,6 +13,8 @@ class Role extends Model
     use SoftDeletes;
 
     protected $guarded =[];
+    protected $hidden = ['created_at','updated_at','deleted_at'];
+
 
     public function users() : HasMany
     {

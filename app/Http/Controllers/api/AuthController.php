@@ -60,10 +60,8 @@ class AuthController extends Controller
                 'password' => 'required|string|confirmed|min:6',
                 'birthday' => 'date|before:today',
                 'image' => 'file|mimes:jpeg,jpg,png|max:2048',
-                'licenseNo'=>'string',
                 'phone' => 'string|min:6|unique:users|max:16',
-                'phone2' => 'string|between:6,16',
-                'is_company'=>'boolean'
+                'role_id'=> 'required|integer|exists:roles,id'
             ]);
 
             if ($validator->fails()) {

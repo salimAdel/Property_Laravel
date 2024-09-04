@@ -29,6 +29,7 @@ class User extends Authenticatable implements JWTSubject
         'phone',
         'birthday',
         'image',
+        'role_id',
     ];
 
     /**
@@ -76,10 +77,6 @@ class User extends Authenticatable implements JWTSubject
     public function Role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
-    }
-    public  function OwnerCompany(): BelongsTo
-    {
-        return $this->belongsTo(company::class,'owner_id','id');
     }
     public  function Company(): BelongsTo
     {

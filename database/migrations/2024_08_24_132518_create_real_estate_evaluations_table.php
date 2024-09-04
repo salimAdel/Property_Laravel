@@ -14,14 +14,13 @@ return new class extends Migration
         Schema::create('real_estate_evaluations', function (Blueprint $table) {
             $table->id();
             $table->boolean('is_company')->default(false);
-            $table->integer('offer_type')->default(0);
+            $table->string('property_type');
             $table->string('purpose')->nullable();
             $table->string('region')->nullable();
             $table->string('piece')->nullable();
             $table->string('coupon')->nullable();
             $table->string('street')->nullable();
             $table->string('home')->nullable();
-            $table->string('Note')->nullable();
             $table->string('phone')->nullable();
             $table->string('phone2')->nullable();
             $table->longText('notes')->nullable();

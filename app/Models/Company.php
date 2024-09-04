@@ -13,12 +13,10 @@ class Company extends Model
     use HasFactory;
     use SoftDeletes;
     protected $guarded =[];
+    protected $hidden = ['created_at','updated_at','deleted_at'];
 
-    public function Owner():HasOne
-    {
-        return $this->hasOne(User::class,'owner_id','id');
-    }
-    public function Employees():HasMany
+
+    public function users()
     {
         return $this->hasMany(User::class);
     }

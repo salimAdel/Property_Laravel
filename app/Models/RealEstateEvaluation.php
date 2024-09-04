@@ -12,5 +12,11 @@ class RealEstateEvaluation extends Model
     use SoftDeletes;
 
     protected $guarded =[];
+    protected $hidden = ['created_at','updated_at','deleted_at'];
+
+    public function Attachment()
+    {
+        return $this->hasMany(EvaluationAttachment::class , 'evaluation_id');
+    }
 
 }

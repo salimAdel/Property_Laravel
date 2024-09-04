@@ -27,38 +27,46 @@ class PartnerController extends Controller
      */
     public function store(Request $request): \Illuminate\Http\JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'string|between:2,100',
-            'location' => 'string',
-            'image' => 'file|mimes:jpeg,jpg,png|max:2048',
-            'active' => 'boolean',
-            'phone'=>'string|between:1,20',
-            'routeType'=>'integer|between:0,2',
+        try {
+            $validator = Validator::make($request->all(), [
+                'name' => 'string|between:2,100',
+                'location' => 'string',
+                'image' => 'file|mimes:jpeg,jpg,png|max:2048',
+                'active' => 'boolean',
+                'phone' => 'string|between:1,20',
+                'routeType' => 'integer|between:0,2',
 
-        ]);
+            ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
+            if ($validator->fails()) {
+                return response()->json($validator->errors()->toJson(), 400);
+            }
+
+            $imagePath = null;
+            if (request('image') != null) {
+                $imagePath = request('image')->store('uploads', 'public');
+            }
+
+            Partner::create(array_merge(
+                $validator->validated(),
+                [
+                    'image' => $imagePath
+                ]
+            ));
+            return response()->json('Partner created successfully', 201);
+        } catch (\Exception $exception) {
+            return response()->json($exception->getMessage(), 500);
         }
-
-        $imagePath = null;
-        if (request('image') != null) {
-            $imagePath = request('image')->store('uploads', 'public');
-        }
-
-        Partner::create(array_merge(
-            $validator->validated(),
-            [
-                'image' => $imagePath
-            ]
-        ));
-        return response()->json('Partner created successfully', 201);
     }
 
     public function show($id): \Illuminate\Http\JsonResponse
     {
-        $Partner = Partner::findorFail($id);
-        return response()->json($Partner);
+        try {
+            $Partner = Partner::findorFail($id);
+            return response()->json($Partner);
+        } catch (\Exception $exception) {
+            return response()->json($exception->getMessage(), 500);
+        }
     }
 
     /**
@@ -66,30 +74,34 @@ class PartnerController extends Controller
      */
     public function update(Request $request, $id): \Illuminate\Http\JsonResponse
     {
-        $Partner = Partner::findorFail($id);
-        $validator = Validator::make($request->all(), [
-            'name' => 'string|between:2,100',
-            'location' => 'string',
-            'image' => 'file|mimes:jpeg,jpg,png|max:2048',
-            'active' => 'boolean',
-            'phone'=>'string|between:1,20',
-            'routeType'=>'integer|between:0,2'
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
+        try {
+            $Partner = Partner::findorFail($id);
+            $validator = Validator::make($request->all(), [
+                'name' => 'string|between:2,100',
+                'location' => 'string',
+                'image' => 'file|mimes:jpeg,jpg,png|max:2048',
+                'active' => 'boolean',
+                'phone' => 'string|between:1,20',
+                'routeType' => 'integer|between:0,2'
+            ]);
+            if ($validator->fails()) {
+                return response()->json($validator->errors()->toJson(), 400);
+            }
+            $imagePath = null;
+            if (request('image') != null) {
+                $imagePath = request('image')->store('uploads', 'public');
+            }
+            $Partner->update(array_merge(
+                $validator->validated(),
+                [
+                    'image' => $imagePath
+                ]
+            ));
+            $Partner->save();
+            return response()->json('Partner updated successfully');
+        }catch (\Exception $exception) {
+            return response()->json($exception->getMessage(), 500);
         }
-        $imagePath = null;
-        if (request('image') != null) {
-            $imagePath = request('image')->store('uploads', 'public');
-        }
-        $Partner->update(array_merge(
-            $validator->validated(),
-            [
-                'image' => $imagePath
-            ]
-        ));
-        $Partner->save();
-        return response()->json('Partner updated successfully');
     }
 
     public function destroy($id): \Illuminate\Http\JsonResponse

@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('real_estate_offers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->constrained();
             $table->string('price')->nullable();
             $table->string('space')->nullable();
             $table->string('region')->nullable();
@@ -28,8 +27,9 @@ return new class extends Migration
             $table->string('whatsapp')->nullable();
             $table->boolean('inKuwait');
             $table->longText('notes')->nullable();
-            $table->foreignId('user_id')->constrained();
             $table->integer('state')->default(0);
+            $table->foreignId('user_id')->constrained();
+            $table->foreignId('category_id')->constrained();
             $table->softDeletes();
             $table->timestamps();
         });

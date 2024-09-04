@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('_companies', function (Blueprint $table) {
+        Schema::create('companies', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('licenseNo')->nullable();
             $table->string('email')->nullable();
+            $table->string('image')->nullable();
             $table->string('phone')->nullable();
             $table->string('phone2')->nullable();
+            $table->boolean('active')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

@@ -24,11 +24,12 @@ class CompanyController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'string|between:2,100',
-            'location' => 'string',
+            'licenseNo' => 'string|between:2,100',
+            'email' => 'string|email|max:100',
             'image' => 'file|mimes:jpeg,jpg,png|max:2048',
-            'active' => 'boolean',
             'phone'=>'string|between:1,20',
-            'routeType'=>'integer|between:0,2',
+            'phone2'=>'string|between:1,20',
+            'active' => 'boolean',
 
         ]);
 
@@ -62,11 +63,12 @@ class CompanyController extends Controller
         $Company = Company::findorFail($id);
         $validator = Validator::make($request->all(), [
             'name' => 'string|between:2,100',
-            'location' => 'string',
+            'licenseNo' => 'string|between:2,100',
+            'email' => 'string|email|max:100',
             'image' => 'file|mimes:jpeg,jpg,png|max:2048',
-            'active' => 'boolean',
             'phone'=>'string|between:1,20',
-            'routeType'=>'integer|between:0,2'
+            'phone2'=>'string|between:1,20',
+            'active' => 'boolean'
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
