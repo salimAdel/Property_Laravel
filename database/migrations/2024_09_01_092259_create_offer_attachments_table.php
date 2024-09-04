@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('partners', function (Blueprint $table) {
+        Schema::create('offer_attachments', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('location')->nullable();
-            $table->string('image')->nullable();
-            $table->string('phone')->nullable();
-            $table->boolean('active')->default(true);
-            $table->integer('routeType')->default(0);
-            $table->softDeletes();
+            $table->string('path');
+            $table->string('type')->nullable();
+            $table->string('extension')->nullable();
+            $table->foreignId('offer_id')->constrained('real_estate_offers');
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('partners');
+        Schema::dropIfExists('offer_attachments');
     }
 };

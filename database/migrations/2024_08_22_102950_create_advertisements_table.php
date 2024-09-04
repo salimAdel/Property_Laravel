@@ -16,6 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('image')->nullable();
             $table->string('toUrl')->nullable();
+            $table->string('phone')->nullable();
+            $table->boolean('active')->default(true);
+            $table->integer('routeType')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

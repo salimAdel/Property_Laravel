@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('phone2')->nullable();
             $table->string('whatsapp')->nullable();
             $table->boolean('inKuwait');
+            $table->longText('notes')->nullable();
             $table->foreignId('user_id')->constrained();
             $table->integer('state')->default(0);
             $table->softDeletes();

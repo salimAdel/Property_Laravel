@@ -77,4 +77,17 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsTo(Role::class);
     }
+    public  function OwnerCompany(): BelongsTo
+    {
+        return $this->belongsTo(company::class,'owner_id','id');
+    }
+    public  function Company(): BelongsTo
+    {
+        return $this->belongsTo(company::class);
+    }
+    public function RealEstateOffer()
+    {
+        return $this->hasMany(RealEstateOffer::class);
+    }
+
 }

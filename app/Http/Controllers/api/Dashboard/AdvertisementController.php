@@ -14,10 +14,15 @@ class AdvertisementController extends Controller
     {
         $this->middleware('jwt.verify');
     }
+
     public function index(): \Illuminate\Http\JsonResponse
     {
-        $Advertisement = Advertisement::all();
-        return response()->json($Advertisement);
+        try {
+            $Advertisement = Advertisement::all();
+            return response()->json($Advertisement);
+        } catch (\Exception $exception) {
+            return response()->json($exception->getMessage(), 500);
+        }
     }
 
     /**
@@ -25,34 +30,44 @@ class AdvertisementController extends Controller
      */
     public function store(Request $request): \Illuminate\Http\JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
-            'toUrl' => 'string|url',
-            'image' => 'file|mimes:jpeg,jpg,png|max:2048',
-        ]);
+        try {
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|between:2,100',
+                'toUrl' => 'string|url',
+                'image' => 'file|mimes:jpeg,jpg,png|max:2048',
+                'phone'=>'string|between:1,20',
+                'routeType'=>'integer|between:0,2'
+            ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
+            if ($validator->fails()) {
+                return response()->json($validator->errors()->toJson(), 400);
+            }
+
+            $imagePath = null;
+            if (request('image') != null) {
+                $imagePath = request('image')->store('uploads', 'public');
+            }
+
+            Advertisement::create(array_merge(
+                $validator->validated(),
+                [
+                    'image' => $imagePath
+                ]
+            ));
+            return response()->json('Advertisement created successfully', 201);
+        } catch (\Exception $exception) {
+            return response()->json($exception->getMessage(), 500);
         }
-
-        $imagePath = null;
-        if (request('image') != null) {
-            $imagePath = request('image')->store('uploads', 'public');
-        }
-
-        Advertisement::create(array_merge(
-            $validator->validated(),
-            [
-                'image' => $imagePath
-            ]
-        ));
-        return response()->json('Advertisement created successfully', 201);
     }
 
     public function show($id): \Illuminate\Http\JsonResponse
     {
-        $Advertisement = Advertisement::findorFail($id);
-        return response()->json($Advertisement);
+        try {
+            $Advertisement = Advertisement::findorFail($id);
+            return response()->json($Advertisement);
+        } catch (\Exception $exception) {
+            return response()->json($exception->getMessage(), 500);
+        }
     }
 
     /**
@@ -60,33 +75,43 @@ class AdvertisementController extends Controller
      */
     public function update(Request $request, $id): \Illuminate\Http\JsonResponse
     {
-        $Advertisement = Advertisement::findorFail($id);
-        $validator = Validator::make($request->all(), [
-            'name' => 'string|between:2,100',
-            'toUrl' => 'string|url',
-            'image' => 'file|mimes:jpeg,jpg,png|max:2048',
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
+        try {
+            $Advertisement = Advertisement::findorFail($id);
+            $validator = Validator::make($request->all(), [
+                'name' => 'string|between:2,100',
+                'toUrl' => 'string|url',
+                'image' => 'file|mimes:jpeg,jpg,png|max:2048',
+                'phone'=>'string|between:1,20',
+                'routeType'=>'integer|between:0,2'
+            ]);
+            if ($validator->fails()) {
+                return response()->json($validator->errors()->toJson(), 400);
+            }
+            $imagePath = null;
+            if (request('image') != null) {
+                $imagePath = request('image')->store('uploads', 'public');
+            }
+            $Advertisement->update(array_merge(
+                $validator->validated(),
+                [
+                    'image' => $imagePath
+                ]
+            ));
+            $Advertisement->save();
+            return response()->json('Advertisement updated successfully');
+        } catch (\Exception $exception) {
+            return response()->json($exception->getMessage(), 500);
         }
-        $imagePath = null;
-        if (request('image') != null) {
-            $imagePath = request('image')->store('uploads', 'public');
-        }
-        $Advertisement->update(array_merge(
-            $validator->validated(),
-            [
-                'image' => $imagePath
-            ]
-        ));
-        $Advertisement->save();
-        return response()->json('Advertisement updated successfully');
     }
 
     public function destroy($id): \Illuminate\Http\JsonResponse
     {
-        $Advertisement = Advertisement::findorFail($id);
-        $Advertisement->delete();
-        return response()->json('Advertisement deleted successfully');
+        try {
+            $Advertisement = Advertisement::findorFail($id);
+            $Advertisement->delete();
+            return response()->json('Advertisement deleted successfully');
+        } catch (\Exception $exception) {
+            return response()->json($exception->getMessage(), 500);
+        }
     }
 }

@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('Note')->nullable();
             $table->string('phone')->nullable();
             $table->string('phone2')->nullable();
+            $table->longText('notes')->nullable();
             $table->integer('state')->default(0);
             $table->softDeletes();
             $table->timestamps();

@@ -4,6 +4,13 @@ use App\Http\Controllers\api\Dashboard\AdvertisementController;
 use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\Dashboard\CategoryController;
 use App\Http\Controllers\api\Dashboard\OfferTypeController;
+use App\Http\Controllers\api\Dashboard\OwnershipController;
+use App\Http\Controllers\api\Dashboard\PartnerController;
+use App\Http\Controllers\api\Dashboard\PrivilegeController;
+use App\Http\Controllers\api\Dashboard\RealEstateEvaluationController;
+use App\Http\Controllers\api\Dashboard\RealEstateOfferController;
+use App\Http\Controllers\api\Dashboard\RoleController;
+use App\Http\Controllers\api\Dashboard\UploadeFileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -72,3 +79,79 @@ Route::group([
     Route::post('/{id}/edit', [CategoryController::class, 'update']);
     Route::get('/{id}/delete', [CategoryController::class, 'destroy']);
 });
+
+
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'Role'
+],function ($router){
+    Route::get('/', [RoleController::class, 'index']);
+    Route::post('/', [RoleController::class, 'store']);
+    Route::get('/{id}', [RoleController::class, 'show']);
+    Route::post('/{id}/edit', [RoleController::class, 'update']);
+    Route::get('/{id}/delete', [RoleController::class, 'destroy']);
+});
+
+
+
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'Ownership'
+],function ($router){
+    Route::get('/', [OwnershipController::class, 'index']);
+    Route::post('/', [OwnershipController::class, 'store']);
+    Route::get('/{id}', [OwnershipController::class, 'show']);
+    Route::post('/{id}/edit', [OwnershipController::class, 'update']);
+    Route::get('/{id}/delete', [OwnershipController::class, 'destroy']);
+});
+
+
+
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'Partner'
+],function ($router){
+    Route::get('/', [PartnerController::class, 'index']);
+    Route::post('/', [PartnerController::class, 'store']);
+    Route::get('/{id}', [PartnerController::class, 'show']);
+    Route::post('/{id}/edit', [PartnerController::class, 'update']);
+    Route::get('/{id}/delete', [PartnerController::class, 'destroy']);
+});
+
+
+Route::get('/Privilege' , [PrivilegeController::class, 'index'])->middleware(['api']);
+
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'RealEstateEvaluation'
+],function ($router){
+    Route::get('/', [RealEstateEvaluationController::class, 'index']);
+    Route::post('/', [RealEstateEvaluationController::class, 'store']);
+    Route::get('/{id}', [RealEstateEvaluationController::class, 'show']);
+    Route::post('/{id}/edit', [RealEstateEvaluationController::class, 'update']);
+    Route::get('/{id}/delete', [RealEstateEvaluationController::class, 'destroy']);
+    Route::Post('/upload', [UploadeFileController::class,'UploadEvaluationFile']);
+
+});
+
+
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'RealEstateOffer'
+],function ($router){
+    Route::get('/', [RealEstateOfferController::class, 'index']);
+    Route::post('/', [RealEstateOfferController::class, 'store']);
+    Route::get('/{id}', [RealEstateOfferController::class, 'show']);
+    Route::post('/{id}/edit', [RealEstateOfferController::class, 'update']);
+    Route::get('/{id}/delete', [RealEstateOfferController::class, 'destroy']);
+    Route::Post('/upload', [UploadeFileController::class,'UploadOfferFile']);
+});
+
+
+
+

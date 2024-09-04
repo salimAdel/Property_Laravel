@@ -17,6 +17,7 @@ class OfferTypeController extends Controller
     {
         try {
             $OfferType=OfferType::all();
+
             return response()->json($OfferType);
 
         }catch (\Exception $exception){
@@ -44,8 +45,9 @@ class OfferTypeController extends Controller
     public function show($id)
     {
         try {
-            $OfferType = OfferType::findorFail($id) ;
-            return response()->json($OfferType);
+            $OfferType = OfferType::findorFail($id);
+            $Categories = $OfferType->categories;
+            return response()->json([$OfferType]);
         }
         catch (\Exception $exception){
             return response()->json($exception->getMessage(), 500);

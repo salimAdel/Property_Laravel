@@ -26,20 +26,24 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required|string|min:6',
-        ]);
+        try {
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email',
+                'password' => 'required|string|min:6',
+            ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 422);
+            }
+
+            if (!$token = auth()->attempt($validator->validated())) {
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
+
+            return $this->createNewToken($token);
+        } catch (\Exception $exception) {
+            return response()->json($exception->getMessage(), 500);
         }
-
-        if (!$token = auth()->attempt($validator->validated())) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-
-        return $this->createNewToken($token);
     }
 
     /**
@@ -49,34 +53,41 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
-            'email' => 'required|string|email|max:100|unique:users',
-            'password' => 'required|string|confirmed|min:6',
-            'phone' => 'string|min:6|unique:users|max:16',
-            'birthday' => 'date|before:today',
-            'image' => 'file|mimes:jpeg,jpg,png|max:2048',
-        ]);
+        try {
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|between:2,100',
+                'email' => 'required|string|email|max:100|unique:users',
+                'password' => 'required|string|confirmed|min:6',
+                'birthday' => 'date|before:today',
+                'image' => 'file|mimes:jpeg,jpg,png|max:2048',
+                'licenseNo'=>'string',
+                'phone' => 'string|min:6|unique:users|max:16',
+                'phone2' => 'string|between:6,16',
+                'is_company'=>'boolean'
+            ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-        $imagePath = null;
-        if (request('image') != null) {
-            $imagePath = request('image')->store('uploads', 'public');
-        }
-        $user = User::create(array_merge(
-            $validator->validated(),
-            [
-                'password' => bcrypt($request->password),
-                'image' => $imagePath
-            ]
-        ));
+            if ($validator->fails()) {
+                return response()->json($validator->errors()->toJson(), 400);
+            }
+            $imagePath = null;
+            if (request('image') != null) {
+                $imagePath = request('image')->store('uploads', 'public');
+            }
+            $user = User::create(array_merge(
+                $validator->validated(),
+                [
+                    'password' => bcrypt($request->password),
+                    'image' => $imagePath
+                ]
+            ));
 
-        return response()->json([
-            'message' => 'User successfully registered',
-            'user' => $user
-        ], 201);
+            return response()->json([
+                'message' => 'User successfully registered',
+                'user' => $user
+            ], 201);
+        } catch (\Exception $exception) {
+            return response()->json($exception->getMessage(), 500);
+        }
     }
 
 
@@ -87,10 +98,13 @@ class AuthController extends Controller
      */
     public function logout()
     {
+        try {
+            auth()->logout();
 
-        auth()->logout();
-
-        return response()->json(['message' => 'User successfully signed out']);
+            return response()->json(['message' => 'User successfully signed out']);
+        } catch (\Exception $exception) {
+            return response()->json($exception->getMessage(), 500);
+        }
     }
 
     /**
@@ -100,7 +114,11 @@ class AuthController extends Controller
      */
     public function refresh()
     {
-        return $this->createNewToken(auth()->refresh());
+        try {
+            return $this->createNewToken(auth()->refresh());
+        } catch (\Exception $exception) {
+            return response()->json($exception->getMessage(), 500);
+        }
     }
 
     /**
@@ -110,7 +128,11 @@ class AuthController extends Controller
      */
     public function userProfile()
     {
-        return response()->json(auth()->user());
+        try {
+            return response()->json(auth()->user());
+        } catch (\Exception $exception) {
+            return response()->json($exception->getMessage(), 500);
+        }
     }
 
     /**
@@ -122,11 +144,15 @@ class AuthController extends Controller
      */
     protected function createNewToken($token)
     {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth()->user()
-        ]);
+        try {
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => auth()->factory()->getTTL() * 60,
+                'user' => auth()->user()
+            ]);
+        } catch (\Exception $exception) {
+            return response()->json($exception->getMessage(), 500);
+        }
     }
 }

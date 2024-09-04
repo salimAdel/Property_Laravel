@@ -18,4 +18,7 @@ class RealEstateOffer extends Model
     {
         return $this->hasMany(OfferType::class);
     }
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

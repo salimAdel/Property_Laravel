@@ -15,7 +15,7 @@ class OfferType extends Model
 
     protected $guarded =[];
 
-    public function Categories():HasMany
+    public function Categories()
     {
         return $this->hasMany(Category::class);
     }
