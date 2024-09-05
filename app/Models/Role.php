@@ -20,4 +20,8 @@ class Role extends Model
     {
         return $this->hasMany(User::class);
     }
+    public function RoleBasedPrivileges()
+    {
+        return $this->hasMany(RoleBasedPrivilege::class);
+    }
 }

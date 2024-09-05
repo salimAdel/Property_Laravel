@@ -4,19 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Privilege extends Model
+class Country extends Model
 {
     use HasFactory;
-    use SoftDeletes;
-
     protected $guarded =[];
     protected $hidden = ['created_at','updated_at','deleted_at'];
 
-    public function RoleBasedPrivileges()
+    public function RealEstateOffers()
     {
-        return $this->hasMany(RoleBasedPrivilege::class);
+        return $this->hasMany(RealEstateOffer::class);
     }
-
 }

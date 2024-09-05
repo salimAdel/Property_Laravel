@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\api\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Models\Privilege;
-use App\Models\Role;
+use App\Models\Country;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class RoleController extends Controller
+class CountryController extends Controller
 {
     public function __construct()
     {
@@ -17,8 +16,9 @@ class RoleController extends Controller
     public function index()
     {
         try {
-            $Role=Role::all();
-            return response()->json($Role);
+            $Country=Country::all();
+
+            return response()->json($Country);
 
         }catch (\Exception $exception){
             return response()->json($exception->getMessage(), 500);
@@ -35,12 +35,8 @@ class RoleController extends Controller
                 return response()->json($validator->errors()->toJson(), 400);
             }
 
-            $Role =Role::create($validator->validated());
-            $Privilege = Privilege::all();
-            foreach ($Privilege as $privilege) {
-                $Role->RoleBasedPrivileges()->create(['privilege_id' => $privilege->id]);
-            }
-            return response()->json('Role created successfully',201);
+            Country::create($validator->validated());
+            return response()->json('Country created successfully',201);
 
         }catch (\Exception $exception){
             return response()->json($exception->getMessage(), 500);
@@ -49,8 +45,8 @@ class RoleController extends Controller
     public function show($id)
     {
         try {
-            $Role = Role::findorFail($id) ;
-            return response()->json($Role);
+            $Country = Country::findorFail($id);
+            return response()->json($Country);
         }
         catch (\Exception $exception){
             return response()->json($exception->getMessage(), 500);
@@ -58,25 +54,25 @@ class RoleController extends Controller
     }
     public function update(Request $request, $id){
         try {
-            $Role = Role::findorFail($id);
+            $Country = Country::findorFail($id);
             $validator = Validator::make($request->all(), [
                 'name' => 'string|between:2,100',
             ]);
             if ($validator->fails()) {
                 return response()->json($validator->errors()->toJson(), 400);
             }
-            $Role->update($validator->validated());
-            $Role->save();
-            return response()->json('Role updated successfully');
+            $Country->update($validator->validated());
+            $Country->save();
+            return response()->json('Country updated successfully');
         }catch (\Exception $exception){
             return response()->json($exception->getMessage(), 500);
         }
     }
     public function destroy($id){
         try {
-            $Role = Role::findorFail($id);
-            $Role->delete();
-            return response()->json('Role deleted successfully');
+            $Country = Country::findorFail($id);
+            $Country->delete();
+            return response()->json('Country deleted successfully');
         }catch (\Exception $exception){
             return response()->json($exception->getMessage(), 500);
         }

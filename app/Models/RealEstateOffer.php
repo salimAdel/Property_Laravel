@@ -27,4 +27,8 @@ class RealEstateOffer extends Model
     {
         return $this->hasMany(OfferAttachment::class , 'offer_id');
     }
+    public function Country()
+    {
+        return $this->belongsTo(Country::class);
+    }
 }

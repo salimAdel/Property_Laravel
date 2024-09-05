@@ -43,7 +43,9 @@ class RealEstateOfferController extends Controller
                 'state' => 'integer|between:0,3',
                 'inKuwait'=>'boolean',
                 'notes' => 'string|between:2,255',
-                'category_id'=>'integer|exists:categories,id',
+                'category_id'=>'required|integer|exists:categories,id',
+                'country_id'=>'integer|exists:countries,id',
+
             ]);
 
             if ($validator->fails()) {
@@ -64,6 +66,7 @@ class RealEstateOfferController extends Controller
             $Attachment = $RealEstateOffer->Attachment;
             $user = $RealEstateOffer->user;
             $Company = $RealEstateOffer->user->company;
+            $Country = $RealEstateOffer->user->country;
             return response()->json([$RealEstateOffer]);
         }
         catch (\Exception $exception){
@@ -90,6 +93,7 @@ class RealEstateOfferController extends Controller
                 'inKuwait'=>'boolean',
                 'notes' => 'string|between:2,255',
                 'category_id'=>'integer|exists:categories,id',
+                'country_id'=>'integer|exists:countries,id',
             ]);
             if ($validator->fails()) {
                 return response()->json($validator->errors()->toJson(), 400);

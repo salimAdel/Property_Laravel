@@ -30,6 +30,7 @@ return new class extends Migration
             $table->integer('state')->default(0);
             $table->foreignId('user_id')->constrained();
             $table->foreignId('category_id')->constrained();
+            $table->foreignId('country_id')->nullable()->constrained();
             $table->softDeletes();
             $table->timestamps();
         });

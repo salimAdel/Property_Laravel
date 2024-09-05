@@ -4,14 +4,17 @@ use App\Http\Controllers\api\Dashboard\AdvertisementController;
 use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\Dashboard\CategoryController;
 use App\Http\Controllers\api\Dashboard\CompanyController;
+use App\Http\Controllers\api\Dashboard\CountryController;
 use App\Http\Controllers\api\Dashboard\OfferTypeController;
 use App\Http\Controllers\api\Dashboard\OwnershipController;
 use App\Http\Controllers\api\Dashboard\PartnerController;
 use App\Http\Controllers\api\Dashboard\PrivilegeController;
 use App\Http\Controllers\api\Dashboard\RealEstateEvaluationController;
 use App\Http\Controllers\api\Dashboard\RealEstateOfferController;
+use App\Http\Controllers\api\Dashboard\RoleBasedPrivilegeController;
 use App\Http\Controllers\api\Dashboard\RoleController;
 use App\Http\Controllers\api\Dashboard\UploadeFileController;
+use App\Http\Controllers\api\Dashboard\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -134,6 +137,29 @@ Route::group([
 });
 
 
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'User'
+],function ($router){
+    Route::get('/', [UserController::class, 'index']);
+    Route::post('/', [UserController::class, 'store']);
+    Route::get('/{id}', [UserController::class, 'show']);
+    Route::post('/{id}/edit', [UserController::class, 'update']);
+    Route::get('/{id}/delete', [UserController::class, 'destroy']);
+});
+
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'Country'
+],function ($router){
+    Route::get('/', [CountryController::class, 'index']);
+    Route::post('/', [CountryController::class, 'store']);
+    Route::get('/{id}', [CountryController::class, 'show']);
+    Route::post('/{id}/edit', [CountryController::class, 'update']);
+    Route::get('/{id}/delete', [CountryController::class, 'destroy']);
+});
+
 Route::get('/Privilege' , [PrivilegeController::class, 'index'])->middleware(['api']);
 
 
@@ -164,6 +190,15 @@ Route::group([
     Route::Post('/{id}/upload', [UploadeFileController::class,'UploadOfferFile']);
 });
 
+
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'RoleBasedPrivilege'
+],function ($router){
+    Route::get('/{role_Id}', [RoleBasedPrivilegeController::class, 'index']);
+    Route::post('/{role_Id}/edit', [RoleBasedPrivilegeController::class, 'update']);
+});
 
 
 
