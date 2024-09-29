@@ -87,7 +87,7 @@ class AdvertisementController extends Controller
             if ($validator->fails()) {
                 return response()->json($validator->errors()->toJson(), 400);
             }
-            $imagePath = null;
+            $imagePath = $Advertisement->image;
             if (request('image') != null) {
                 $imagePath = request('image')->store('uploads', 'public');
             }

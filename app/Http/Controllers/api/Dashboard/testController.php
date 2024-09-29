@@ -13,10 +13,11 @@ class testController extends Controller
     }
     public function test(Request $request): \Illuminate\Http\JsonResponse
     {
+        $ar = [ 1 ,1,1,1,1,];
 
         try {
             return response()->json(auth()->id(), 201);
-
+            foreach ($ar)
         } catch (\Exception $exception) {
             return response()->json($exception->getMessage(), 500);
         }

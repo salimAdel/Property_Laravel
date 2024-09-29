@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\api\Dashboard\AdvertisementController;
 use App\Http\Controllers\api\AuthController;
+use App\Http\Controllers\api\Dashboard\AppInfoController;
 use App\Http\Controllers\api\Dashboard\CategoryController;
 use App\Http\Controllers\api\Dashboard\CompanyController;
 use App\Http\Controllers\api\Dashboard\CountryController;
@@ -201,5 +202,11 @@ Route::group([
 });
 
 
-
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'AppInfo'
+],function ($router){
+    Route::get('/', [AppInfoController::class, 'index']);
+    Route::post('/', [AppInfoController::class, 'update']);
+});
 Route::get('/test',[\App\Http\Controllers\api\Dashboard\testController::class,'test']);

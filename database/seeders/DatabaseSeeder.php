@@ -23,7 +23,9 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             RoleBasedPrivilegeSeeder::class,
-            CountrySeeder::class
+            CountrySeeder::class,
+            OfferTypeSeeder::class,
+            AppInfoSeeder::class,
         ]);
     }
 }
