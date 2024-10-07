@@ -183,7 +183,7 @@ Route::group([
     'middleware' => 'api',
     'prefix' => 'RealEstateOffer'
 ],function ($router){
-    Route::get('/', [RealEstateOfferController::class, 'index']);
+    Route::get('/index/{Category_id?}', [RealEstateOfferController::class, 'index']);
     Route::post('/', [RealEstateOfferController::class, 'store']);
     Route::get('/{id}', [RealEstateOfferController::class, 'show']);
     Route::post('/{id}/edit', [RealEstateOfferController::class, 'update']);

@@ -14,10 +14,21 @@ class RealEstateOfferController extends Controller
     {
         $this->middleware('jwt.verify');
     }
-    public function index()
+    public function index($Category_id = null )
     {
         try {
             $RealEstateOffer=RealEstateOffer::all();
+
+//            if($OfferType_id != null){
+//                $RealEstateOffer = OfferType::findorFail($OfferType_id)->Categories->RealEstateOffer;
+//            }
+
+            if($Category_id != null){
+                $RealEstateOffer = Category::findorFail($Category_id)->RealEstateOffer;
+            }
+
+
+
             return response()->json($RealEstateOffer);
 
         }catch (\Exception $exception){
@@ -40,6 +51,7 @@ class RealEstateOfferController extends Controller
                 'phone' => 'string|between:6,16',
                 'phone2' => 'string|between:6,16',
                 'whatsapp' => 'string|between:6,16',
+                'licenseNo'=>'string|between:2,100',
                 'state' => 'integer|between:0,3',
                 'inKuwait'=>'boolean',
                 'notes' => 'string|between:2,255',
@@ -52,8 +64,8 @@ class RealEstateOfferController extends Controller
                 return response()->json($validator->errors()->toJson(), 400);
             }
             $Category = Category::find($request->get('category_id'));
-            RealEstateOffer::create(array_merge($validator->validated(),['user_id'=>auth()->id()]));
-            return response()->json('RealEstateOffer created successfully',201);
+            $RealEstateOffer =RealEstateOffer::create(array_merge($validator->validated(),['user_id'=>auth()->id()]));
+            return response()->json($RealEstateOffer,201);
 
         }catch (\Exception $exception){
             return response()->json($exception->getMessage(), 500);
@@ -89,6 +101,7 @@ class RealEstateOfferController extends Controller
                 'phone' => 'string|between:6,16',
                 'phone2' => 'string|between:6,16',
                 'whatsapp' => 'string|between:6,16',
+                'licenseNo'=>'string|between:2,100',
                 'state' => 'integer|between:0,3',
                 'inKuwait'=>'boolean',
                 'notes' => 'string|between:2,255',

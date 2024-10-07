@@ -21,8 +21,8 @@ class Category extends Model
         return $this->belongsTo(OfferType::class);
     }
 
-    public function RealEstateEvaluation():HasMany
+    public function RealEstateOffer():HasMany
     {
-        return $this->hasMany(RealEstateEvaluation::class);
+        return $this->hasMany(RealEstateOffer::class);
     }
 }

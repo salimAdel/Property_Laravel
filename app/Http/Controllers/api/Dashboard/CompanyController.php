@@ -25,7 +25,7 @@ class CompanyController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'string|between:2,100',
             'licenseNo' => 'string|between:2,100',
-            'email' => 'string|email|max:100',
+            'email' => 'unique|string|email|max:100',
             'image' => 'file|mimes:jpeg,jpg,png|max:2048',
             'phone'=>'string|between:1,20',
             'phone2'=>'string|between:1,20',
@@ -64,7 +64,7 @@ class CompanyController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'string|between:2,100',
             'licenseNo' => 'string|between:2,100',
-            'email' => 'string|email|max:100',
+            'email' => 'required|unique|string|email|max:100',
             'image' => 'file|mimes:jpeg,jpg,png|max:2048',
             'phone'=>'string|between:1,20',
             'phone2'=>'string|between:1,20',

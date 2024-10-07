@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('licenseNo')->nullable();
-            $table->string('email')->nullable();
+            $table->string('email')->unique();
             $table->string('image')->nullable();
             $table->string('phone')->nullable();
             $table->string('phone2')->nullable();

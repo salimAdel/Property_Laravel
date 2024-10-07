@@ -30,7 +30,7 @@ class UploadeFileController extends Controller
                     'path' => $imagePath,
                 ]);
             }
-            return response()->json("OfferAttachment created successfully" , 200);
+            return response()->json($request , 200);
         }catch (\Exception $exception){
             return response()->json($exception->getMessage(), 500);
         }
@@ -58,7 +58,7 @@ class UploadeFileController extends Controller
                     'path' => $imagePath,
                 ]);
             }
-            return response()->json('OfferAttachment created successfully' , 200);
+            return response()->json($request , 200);
         }catch (\Exception $exception){
             return response()->json($exception->getMessage(), 500);
         }

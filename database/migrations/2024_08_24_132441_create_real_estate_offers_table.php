@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('phone2')->nullable();
             $table->string('whatsapp')->nullable();
+            $table->string('licenseNo')->nullable();
             $table->boolean('inKuwait');
             $table->longText('notes')->nullable();
             $table->integer('state')->default(0);

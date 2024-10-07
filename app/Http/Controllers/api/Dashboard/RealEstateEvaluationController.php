@@ -17,6 +17,8 @@ class RealEstateEvaluationController extends Controller
     {
         try {
             $RealEstateEvaluation=RealEstateEvaluation::all();
+
+
             return response()->json($RealEstateEvaluation);
 
         }catch (\Exception $exception){
@@ -48,7 +50,7 @@ class RealEstateEvaluationController extends Controller
 
             $RealEstateEvaluation = RealEstateEvaluation::create($validator->validated());
 
-            return response()->json('RealEstateEvaluation created successfully',201);
+            return response()->json($RealEstateEvaluation,201);
 
         }catch (\Exception $exception){
             return response()->json($exception->getMessage(), 500);

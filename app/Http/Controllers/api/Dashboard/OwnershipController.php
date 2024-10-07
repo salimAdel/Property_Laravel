@@ -36,6 +36,8 @@ class OwnershipController extends Controller
                 'phone' => 'string|between:6,16',
                 'phone2' => 'string|between:6,16',
                 'state' => 'digits_between:0,3',
+                'notes' => 'string|between:2,255',
+
             ]);
 
             if ($validator->fails()) {
@@ -63,7 +65,7 @@ class OwnershipController extends Controller
         try {
             $Ownership = Ownership::findorFail($id);
             $validator = Validator::make($request->all(), [
-                'name' => 'required|string|between:2,100',
+                'name' => 'string|between:2,100',
                 'region' => 'string|between:2,100',
                 'piece' => 'string|between:2,100',
                 'coupon' => 'string|between:2,100',
@@ -72,6 +74,8 @@ class OwnershipController extends Controller
                 'phone' => 'string|between:6,16',
                 'phone2' => 'string|between:6,16',
                 'state' => 'digits_between:0,3',
+                'notes' => 'string|between:2,255',
+
             ]);
             if ($validator->fails()) {
                 return response()->json($validator->errors()->toJson(), 400);

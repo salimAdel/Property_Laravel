@@ -13,12 +13,12 @@ class RealEstateOffer extends Model
     use SoftDeletes;
 
     protected $guarded =[];
-    protected $hidden = ['created_at','updated_at','deleted_at'];
+    protected $hidden = ['deleted_at'];
 
 
-    public function offerTypes():HasMany
+    public function category()
     {
-        return $this->hasMany(OfferType::class);
+        return $this->belongsTo(Category::class);
     }
     public function user(){
         return $this->belongsTo(User::class);
