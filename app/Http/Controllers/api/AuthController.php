@@ -61,7 +61,7 @@ class AuthController extends Controller
                 'birthday' => 'date|before:today',
                 'image' => 'file|mimes:jpeg,jpg,png|max:2048',
                 'phone' => 'string|min:6|unique:users|max:16',
-                'role_id'=> 'required|integer|exists:roles,id'
+                'role_id' => 'required|integer|exists:roles,id'
             ]);
 
             if ($validator->fails()) {
@@ -114,6 +114,55 @@ class AuthController extends Controller
     {
         try {
             return $this->createNewToken(auth()->refresh());
+        } catch (\Exception $exception) {
+            return response()->json($exception->getMessage(), 500);
+        }
+    }
+
+    public function update(Request $request)
+    {
+        try {
+            $User = auth()->user();
+            $validator = Validator::make($request->all(), [
+                'name' => 'string|between:2,100',
+                'birthday' => 'date|before:today',
+                'image' => 'file|mimes:jpeg,jpg,png|max:2048',
+                'phone' => 'string|min:6|max:16',
+                'role_id' => 'integer|exists:roles,id'
+            ]);
+            if ($validator->fails()) {
+                return response()->json($validator->errors()->toJson(), 400);
+            }
+            $imagePath = $User->image;
+            if (request('image') != null) {
+                $imagePath = request('image')->store('uploads', 'public');
+            }
+            $User->update(array_merge(
+                $validator->validated(),
+                [
+                    'image' => $imagePath
+                ]
+            ));
+            $User->save();
+            return response()->json('User updated successfully');
+        } catch (\Exception $exception) {
+            return response()->json($exception->getMessage(), 500);
+        }
+    }
+
+
+    public function resetPassword(Request $request)
+    {
+        try {
+            $User = auth()->user();
+            $validator = Validator::make($request->all(), [
+                'password' => 'required|string|confirmed|min:6',
+            ]);
+            if ($validator->fails()) {
+                return response()->json($validator->errors()->toJson(), 400);
+            }
+            $User->update(['password'=> bcrypt($request->password)]);
+            return response()->json('Password updated successfully');
         } catch (\Exception $exception) {
             return response()->json($exception->getMessage(), 500);
         }

@@ -17,7 +17,7 @@ class RealEstateOfferController extends Controller
     public function index($Category_id = null )
     {
         try {
-            $RealEstateOffer=RealEstateOffer::all();
+            $RealEstateOffer=RealEstateOffer::with('attachment')->get();
 
 //            if($OfferType_id != null){
 //                $RealEstateOffer = OfferType::findorFail($OfferType_id)->Categories->RealEstateOffer;

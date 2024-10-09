@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('ownerships', function (Blueprint $table) {
             $table->id();
+            $table->boolean('is_company')->default(false);
             $table->string('name');
             $table->string('region')->nullable();
             $table->string('piece')->nullable();

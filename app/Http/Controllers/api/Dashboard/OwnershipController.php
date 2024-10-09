@@ -37,6 +37,8 @@ class OwnershipController extends Controller
                 'phone2' => 'string|between:6,16',
                 'state' => 'digits_between:0,3',
                 'notes' => 'string|between:2,255',
+                'is_company'=>'boolean',
+
 
             ]);
 
@@ -75,6 +77,8 @@ class OwnershipController extends Controller
                 'phone2' => 'string|between:6,16',
                 'state' => 'digits_between:0,3',
                 'notes' => 'string|between:2,255',
+                'is_company'=>'boolean',
+
 
             ]);
             if ($validator->fails()) {

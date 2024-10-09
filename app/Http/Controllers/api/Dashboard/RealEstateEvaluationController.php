@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\RealEstateEvaluation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+
 
 class RealEstateEvaluationController extends Controller
 {
@@ -16,7 +18,7 @@ class RealEstateEvaluationController extends Controller
     public function index()
     {
         try {
-            $RealEstateEvaluation=RealEstateEvaluation::all();
+            $RealEstateEvaluation=RealEstateEvaluation::with('attachment')->get();
 
 
             return response()->json($RealEstateEvaluation);

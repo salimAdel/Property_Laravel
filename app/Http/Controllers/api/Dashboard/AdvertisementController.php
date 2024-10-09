@@ -36,6 +36,7 @@ class AdvertisementController extends Controller
                 'toUrl' => 'string|url',
                 'image' => 'file|mimes:jpeg,jpg,png|max:2048',
                 'phone'=>'string|between:1,20',
+                'licenseNo' => 'string|between:2,100',
                 'routeType'=>'integer|between:0,2'
             ]);
 
@@ -82,6 +83,7 @@ class AdvertisementController extends Controller
                 'toUrl' => 'string|url',
                 'image' => 'file|mimes:jpeg,jpg,png|max:2048',
                 'phone'=>'string|between:1,20',
+                'licenseNo' => 'string|between:2,100',
                 'routeType'=>'integer|between:0,2'
             ]);
             if ($validator->fails()) {
