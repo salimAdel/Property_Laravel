@@ -30,6 +30,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+/*
+|--------------------------------------------------------------------------
+| API JWT Authentication Start
+|--------------------------------------------------------------------------
+*/
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -46,10 +52,18 @@ Route::group([
     Route::post('/update-profile', [AuthController::class, 'update']);
     Route::post('/rest-password', [AuthController::class, 'resetPassword']);
 });
+/*
+|--------------------------------------------------------------------------
+| API JWT Authentication End
+|--------------------------------------------------------------------------
+*/
 
 
-
-
+/*
+|--------------------------------------------------------------------------
+| API Dashboard Start
+|--------------------------------------------------------------------------
+*/
 Route::group([
     'middleware' => 'api',
     'prefix' => 'Advertisement'
@@ -60,9 +74,6 @@ Route::group([
     Route::post('/{id}/edit', [AdvertisementController::class, 'update']);
     Route::get('/{id}/delete', [AdvertisementController::class, 'destroy']);
 });
-
-
-
 
 Route::group([
     'middleware' => 'api',
@@ -75,7 +86,6 @@ Route::group([
     Route::get('/{id}/delete', [OfferTypeController::class, 'destroy']);
 });
 
-
 Route::group([
     'middleware' => 'api',
     'prefix' => 'Category'
@@ -86,7 +96,6 @@ Route::group([
     Route::post('/{id}/edit', [CategoryController::class, 'update']);
     Route::get('/{id}/delete', [CategoryController::class, 'destroy']);
 });
-
 
 Route::group([
     'middleware' => 'api',
@@ -99,7 +108,6 @@ Route::group([
     Route::get('/{id}/delete', [CompanyController::class, 'destroy']);
 });
 
-
 Route::group([
     'middleware' => 'api',
     'prefix' => 'Role'
@@ -110,9 +118,6 @@ Route::group([
     Route::post('/{id}/edit', [RoleController::class, 'update']);
     Route::get('/{id}/delete', [RoleController::class, 'destroy']);
 });
-
-
-
 
 Route::group([
     'middleware' => 'api',
@@ -125,9 +130,6 @@ Route::group([
     Route::get('/{id}/delete', [OwnershipController::class, 'destroy']);
 });
 
-
-
-
 Route::group([
     'middleware' => 'api',
     'prefix' => 'Partner'
@@ -139,7 +141,6 @@ Route::group([
     Route::get('/{id}/delete', [PartnerController::class, 'destroy']);
 });
 
-
 Route::group([
     'middleware' => 'api',
     'prefix' => 'User'
@@ -150,7 +151,6 @@ Route::group([
     Route::post('/{id}/edit', [UserController::class, 'update']);
     Route::get('/{id}/delete', [UserController::class, 'destroy']);
 });
-
 
 Route::group([
     'middleware' => 'api',
@@ -165,7 +165,6 @@ Route::group([
 
 Route::get('/Privilege' , [PrivilegeController::class, 'index'])->middleware(['api']);
 
-
 Route::group([
     'middleware' => 'api',
     'prefix' => 'RealEstateEvaluation'
@@ -179,8 +178,6 @@ Route::group([
 
 });
 
-
-
 Route::group([
     'middleware' => 'api',
     'prefix' => 'RealEstateOffer'
@@ -193,8 +190,6 @@ Route::group([
     Route::Post('/{id}/upload', [UploadeFileController::class,'UploadOfferFile']);
 });
 
-
-
 Route::group([
     'middleware' => 'api',
     'prefix' => 'RoleBasedPrivilege'
@@ -203,7 +198,6 @@ Route::group([
     Route::post('/{role_Id}/edit', [RoleBasedPrivilegeController::class, 'update']);
 });
 
-
 Route::group([
     'middleware' => 'api',
     'prefix' => 'AppInfo'
@@ -211,4 +205,35 @@ Route::group([
     Route::get('/', [AppInfoController::class, 'index']);
     Route::post('/', [AppInfoController::class, 'update']);
 });
+/*
+|--------------------------------------------------------------------------
+| API Dashboard End
+|--------------------------------------------------------------------------
+*/
+
+/*
+|--------------------------------------------------------------------------
+| API Client Start
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/Client/Advertisement', [\App\Http\Controllers\api\Client\AdvertisementController::class, 'index'])->middleware(['api']);
+Route::get('/Client/AppInfo', [\App\Http\Controllers\api\Client\AppInfoController::class, 'index'])->middleware(['api']);
+Route::get('/Client/Company', [\App\Http\Controllers\api\Client\CompanyController::class, 'index'])->middleware(['api']);
+Route::get('/Client/OfferType', [\App\Http\Controllers\api\Client\OfferTypeController::class, 'index'])->middleware(['api']);
+Route::get('/Client/Partner', [\App\Http\Controllers\api\Client\PartnerController::class, 'index'])->middleware(['api']);
+Route::post('/Client/Ownership', [\App\Http\Controllers\api\Client\OwnershipController::class, 'store'])->middleware(['api']);
+Route::post('/Client/RealEstateEvaluation', [\App\Http\Controllers\api\Client\RealEstateEvaluationController::class, 'store'])->middleware(['api']);
+Route::Post('/Client/RealEstateEvaluation/{id}/upload', [UploadeFileController::class,'UploadEvaluationFile'])->middleware(['api']);
+Route::get('/Client/RealEstateOffer', [\App\Http\Controllers\api\Client\RealEstateOfferController::class, 'index'])->middleware(['api']);
+Route::post('/Client/RealEstateOffer', [RealEstateOfferController::class, 'store'])->middleware(['api']);
+Route::Post('/Client/RealEstateOffer/{id}/upload', [UploadeFileController::class,'UploadOfferFile'])->middleware(['api']);
+Route::get('/Client/RealEstateOffer/{id}', [\App\Http\Controllers\api\Client\RealEstateOfferController::class, 'show']);
+
+/*
+|--------------------------------------------------------------------------
+| API Client End
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/test',[\App\Http\Controllers\api\Dashboard\testController::class,'test']);

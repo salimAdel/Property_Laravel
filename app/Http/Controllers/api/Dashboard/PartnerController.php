@@ -18,8 +18,12 @@ class PartnerController extends Controller
 
     public function index(): \Illuminate\Http\JsonResponse
     {
-        $Partner = Partner::all();
-        return response()->json($Partner);
+        try {
+            $Partner = Partner::all();
+            return response()->json($Partner);
+        }catch (\Exception $exception) {
+            return response()->json($exception->getMessage(), 500);
+        }
     }
 
     /**
