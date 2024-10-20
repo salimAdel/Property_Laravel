@@ -12,8 +12,24 @@ class RealEstateOfferController extends Controller
 
     public function index(Request $request){
         try {
-            $query = RealEstateOffer::query();
+            $query = RealEstateOffer::with(['attachment', 'user' , 'user.company']);
 
+            // فلترة حسب المستخدم
+            $query->when($request->filled('user_id'), function ($q) use ($request) {
+                return $q->where('user_id', $request->user_id);
+            });
+
+            // فلترة حسب الشركة
+            $query->when($request->filled('company_id'), function ($q) use ($request) {
+                return $q->whereHas('user.company', function ($q) use ($request) {
+                    return $q->where('id', $request->company_id);
+                });
+            });
+
+            // فلترة حسب المحافظة
+            $query->when($request->filled('governorate'), function ($q) use ($request) {
+                return $q->where('governorate', $request->governorate);
+            });
             // فلترة حسب السعر بين عددين
             $query->when($request->filled('min_price') && $request->filled('max_price'), function ($q) use ($request) {
                 return $q->whereBetween('price', [$request->min_price, $request->max_price]);

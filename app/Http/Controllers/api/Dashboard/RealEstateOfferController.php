@@ -14,24 +14,68 @@ class RealEstateOfferController extends Controller
     {
         $this->middleware('jwt.verify');
     }
-    public function index($Category_id = null )
+    public function index(Request $request)
     {
         try {
-            $RealEstateOffer=RealEstateOffer::with('attachment')->get();
+            $query = RealEstateOffer::with(['attachment', 'user' , 'user.company']);
 
-//            if($OfferType_id != null){
-//                $RealEstateOffer = OfferType::findorFail($OfferType_id)->Categories->RealEstateOffer;
-//            }
+            // فلترة حسب المستخدم
+            $query->when($request->filled('user_id'), function ($q) use ($request) {
+                return $q->where('user_id', $request->user_id);
+            });
 
-            if($Category_id != null){
-                $RealEstateOffer = Category::findorFail($Category_id)->RealEstateOffer;
-            }
+            // فلترة حسب الشركة
+            $query->when($request->filled('company_id'), function ($q) use ($request) {
+                return $q->whereHas('user.company', function ($q) use ($request) {
+                    return $q->where('id', $request->company_id);
+                });
+            });
+
+            // فلترة حسب المحافظة
+            $query->when($request->filled('governorate'), function ($q) use ($request) {
+                return $q->where('governorate', $request->governorate);
+            });
+            // فلترة حسب السعر بين عددين
+            $query->when($request->filled('min_price') && $request->filled('max_price'), function ($q) use ($request) {
+                return $q->whereBetween('price', [$request->min_price, $request->max_price]);
+            });
 
 
+            // فلترة حسب offer_type_id
+            $query->when($request->filled('offer_type_id'), function ($q) use ($request) {
+                return $q->whereHas('category.offerType', function ($q) use ($request) {
+                    return $q->where('id', $request->offer_type_id);
+                });
+            });
 
-            return response()->json($RealEstateOffer);
+            // فلترة حسب category_id
+            $query->when($request->filled('category_id'), function ($q) use ($request) {
+                return $q->where('category_id', $request->category_id);
+            });
 
-        }catch (\Exception $exception){
+            // فلترة حسب country_id
+            $query->when($request->filled('country_id'), function ($q) use ($request) {
+                return $q->where('country_id', $request->country_id);
+            });
+
+            // فلترة حسب inKuwait
+            $query->when($request->filled('inKuwait'), function ($q) use ($request) {
+                return $q->where('inKuwait', $request->inKuwait);
+            });
+
+            // فلترة حسب space
+            $query->when($request->filled('min_space') && $request->filled('max_space'), function ($q) use ($request) {
+                return $q->whereBetween('space', [$request->min_space, $request->max_space]);
+            });
+
+            // تحديد عدد العناصر في الصفحة
+            $perPage = $request->input('per_page', 10); // القيمة الافتراضية هي 10
+
+            // تنفيذ الاستعلام مع التصفح
+            $offers = $query->paginate($perPage);
+
+            return response()->json($offers);
+        }catch (\Exception $exception) {
             return response()->json($exception->getMessage(), 500);
         }
     }
@@ -39,6 +83,7 @@ class RealEstateOfferController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
+                'title' => 'string|between:2,100',
                 'price' => 'string|between:2,100',
                 'space' => 'string|between:2,100',
                 'region' => 'string|between:2,100',
@@ -53,6 +98,7 @@ class RealEstateOfferController extends Controller
                 'whatsapp' => 'string|between:6,16',
                 'licenseNo'=>'string|between:2,100',
                 'state' => 'integer|between:0,3',
+                'governorate' => 'string|between:2,100',
                 'inKuwait'=>'boolean',
                 'notes' => 'string|between:2,255',
                 'category_id'=>'required|integer|exists:categories,id',
@@ -89,6 +135,7 @@ class RealEstateOfferController extends Controller
         try {
             $RealEstateOffer = RealEstateOffer::findorFail($id);
             $validator = Validator::make($request->all(), [
+                'title' => 'string|between:2,100',
                 'price' => 'string|between:2,100',
                 'space' => 'string|between:2,100',
                 'region' => 'string|between:2,100',
@@ -104,6 +151,7 @@ class RealEstateOfferController extends Controller
                 'licenseNo'=>'string|between:2,100',
                 'state' => 'integer|between:0,3',
                 'inKuwait'=>'boolean',
+                'governorate' => 'string|between:2,100',
                 'notes' => 'string|between:2,255',
                 'category_id'=>'integer|exists:categories,id',
                 'country_id'=>'integer|exists:countries,id',

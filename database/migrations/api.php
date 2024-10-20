@@ -175,24 +175,19 @@ Route::group([
     Route::post('/{id}/edit', [RealEstateEvaluationController::class, 'update']);
     Route::get('/{id}/delete', [RealEstateEvaluationController::class, 'destroy']);
     Route::Post('/{id}/upload', [UploadeFileController::class,'UploadEvaluationFile']);
-    Route::Post('/{id}/update_file', [UploadeFileController::class,'UpdateEvaluationFile']);
-    Route::get('/{id}/delete_file', [UploadeFileController::class,'DeleteEvaluationFile']);
 
 });
 
-//test
 Route::group([
     'middleware' => 'api',
     'prefix' => 'RealEstateOffer'
 ],function ($router){
-    Route::get('/', [RealEstateOfferController::class, 'index']);
+    Route::get('/index/{Category_id?}', [RealEstateOfferController::class, 'index']);
     Route::post('/', [RealEstateOfferController::class, 'store']);
     Route::get('/{id}', [RealEstateOfferController::class, 'show']);
     Route::post('/{id}/edit', [RealEstateOfferController::class, 'update']);
     Route::get('/{id}/delete', [RealEstateOfferController::class, 'destroy']);
     Route::Post('/{id}/upload', [UploadeFileController::class,'UploadOfferFile']);
-    Route::Post('/{id}/update_file', [UploadeFileController::class,'UpdateOfferFile']);
-    Route::get('/{id}/delete_file', [UploadeFileController::class,'DeleteOfferFile']);
 });
 
 Route::group([
