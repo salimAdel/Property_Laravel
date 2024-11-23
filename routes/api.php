@@ -233,6 +233,7 @@ Route::Post('/Client/RealEstateEvaluation/{id}/upload', [UploadeFileController::
 Route::get('/Client/RealEstateOffer', [\App\Http\Controllers\api\Client\RealEstateOfferController::class, 'index'])->middleware(['api']);
 Route::post('/Client/RealEstateOffer', [RealEstateOfferController::class, 'store'])->middleware(['api']);
 Route::Post('/Client/RealEstateOffer/{id}/upload', [UploadeFileController::class,'UploadOfferFile'])->middleware(['api']);
+Route::get('/Client/RealEstateOffer/search', [\App\Http\Controllers\api\Client\RealEstateOfferController::class,'Search'])->middleware(['api']);
 Route::get('/Client/RealEstateOffer/{id}', [\App\Http\Controllers\api\Client\RealEstateOfferController::class, 'show']);
 
 /*

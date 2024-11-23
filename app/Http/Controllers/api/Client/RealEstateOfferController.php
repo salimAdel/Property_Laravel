@@ -12,7 +12,8 @@ class RealEstateOfferController extends Controller
 
     public function index(Request $request){
         try {
-            $query = RealEstateOffer::with(['attachment', 'user' , 'user.company']);
+//            $query = RealEstateOffer::with(['attachment', 'user' , 'user.company']);
+            $query = RealEstateOffer::with(['attachment', 'user' ]);
 
             // فلترة حسب المستخدم
             $query->when($request->filled('user_id'), function ($q) use ($request) {
@@ -20,11 +21,11 @@ class RealEstateOfferController extends Controller
             });
 
             // فلترة حسب الشركة
-            $query->when($request->filled('company_id'), function ($q) use ($request) {
-                return $q->whereHas('user.company', function ($q) use ($request) {
-                    return $q->where('id', $request->company_id);
-                });
-            });
+//            $query->when($request->filled('company_id'), function ($q) use ($request) {
+//                return $q->whereHas('user.company', function ($q) use ($request) {
+//                    return $q->where('id', $request->company_id);
+//                });
+//            });
 
             // فلترة حسب المحافظة
             $query->when($request->filled('governorate'), function ($q) use ($request) {
@@ -62,6 +63,43 @@ class RealEstateOfferController extends Controller
             $query->when($request->filled('min_space') && $request->filled('max_space'), function ($q) use ($request) {
                 return $q->whereBetween('space', [$request->min_space, $request->max_space]);
             });
+
+            // تحديد عدد العناصر في الصفحة
+            $perPage = $request->input('per_page', 10); // القيمة الافتراضية هي 10
+
+            // تنفيذ الاستعلام مع التصفح
+            $offers = $query->paginate($perPage);
+
+            return response()->json($offers);
+        }catch (\Exception $exception) {
+            return response()->json($exception->getMessage(), 500);
+        }
+    }
+    public function Search(Request $request){
+        try {
+//            $query = RealEstateOffer::with(['attachment', 'user' , 'user.company']);
+            $query = RealEstateOffer::with(['attachment', 'user' ]);
+
+
+            if ($request->filled('search')) {
+                $search = $request->input('search');
+                $query->where(function ($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%")
+                        ->orWhere('price', $search)
+                        ->orWhere('governorate', 'like', "%{$search}%")
+//                        ->orWhere('country_id', function ($q) use ($search) {
+//                            $q->select('id')
+//                                ->from('countries')
+//                                ->where('name', 'like', "%{$search}%");
+//                        })
+                        ->orWhereIn('country_id', function ($subQuery) use ($search) {
+                            $subQuery->select('id')
+                                ->from('countries')
+                                ->where('name', 'like', "%{$search}%");
+                        })
+                        ->orWhere('space',$search);
+                });
+            }
 
             // تحديد عدد العناصر في الصفحة
             $perPage = $request->input('per_page', 10); // القيمة الافتراضية هي 10

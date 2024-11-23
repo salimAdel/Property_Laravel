@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\VerifyEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -78,7 +79,7 @@ class AuthController extends Controller
                     'image' => $imagePath
                 ]
             ));
-
+            $user->notify(new VerifyEmail());
             return response()->json([
                 'message' => 'User successfully registered',
                 'user' => $user
